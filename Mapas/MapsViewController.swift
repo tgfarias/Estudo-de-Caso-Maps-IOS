@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-class MapsViewController: UIViewController {
+class MapsViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var vrMapa: MKMapView!
     @IBAction func vrSegment(_ sender: UISegmentedControl)
     {
@@ -46,6 +46,7 @@ class MapsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        vrMapa.delegate = self
         // Do any additional setup after loading the view, typically from a nib.
         let destino = CLLocationCoordinate2D(latitude: -10.270148, longitude: -48.331896)
         let zoom = MKCoordinateSpanMake(0.01, 0.01)
@@ -56,6 +57,14 @@ class MapsViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let pinoPerson = MKAnnotationView(annotation: annotation, reuseIdentifier: nil)
+        pinoPerson.image = UIImage(named: "images")
+        pinoPerson.canShowCallout = true
+        
+        return pinoPerson
     }
     
     
