@@ -7,9 +7,27 @@
 //
 
 import UIKit
+import MapKit
 
-class ViewController: UIViewController {
-
+class MapsViewController: UIViewController {
+    @IBOutlet weak var vrMapa: MKMapView!
+    @IBAction func vrSegment(_ sender: UISegmentedControl)
+    {
+        if(sender.selectedSegmentIndex == 0)
+        {
+            vrMapa.mapType = .satellite
+        
+        }
+        else if(sender.selectedSegmentIndex == 1)
+        {
+            vrMapa.mapType = .hybrid
+        }
+        else
+        {
+            vrMapa.mapType = .standard
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -19,6 +37,8 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
 
 
 }
