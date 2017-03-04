@@ -27,10 +27,30 @@ class MapsViewController: UIViewController {
             vrMapa.mapType = .standard
         }
     }
+    @IBAction func trataGesto(_ sender: UILongPressGestureRecognizer)
+    {
+        if (sender.state != .began)
+        {
+            return
+        }
+        //ponto onde houve o toque na view
+        let ponto = sender.location(in: vrMapa)
+        //conversao da coordenada do ponto na view para o vrMapa
+        let coordenada = vrMapa.convert(ponto, toCoordinateFrom: vrMapa)
+        
+        let pino = MKPointAnnotation()
+        pino.coordinate = coordenada
+        pino.title = "Algum lugar que eu curto?"
+        vrMapa.addAnnotation(pino)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let destino = CLLocationCoordinate2D(latitude: -10.270148, longitude: -48.331896)
+        let zoom = MKCoordinateSpanMake(0.01, 0.01)
+        let regiao = MKCoordinateRegionMake(destino, zoom)
+        vrMapa.setRegion(regiao, animated: true)
     }
 
     override func didReceiveMemoryWarning() {
