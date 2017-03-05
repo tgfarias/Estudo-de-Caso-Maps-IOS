@@ -64,12 +64,20 @@ class MapsViewController: UIViewController, MKMapViewDelegate, CLLocationManager
             let destinoMapItem = MKMapItem(placemark: destinoPlaceMark)
             //configura o objeto q busca as direcoes do caminho
             //para o tipo de transporte desejado
-            let direcoes  = MKDirectionsRequest()
-            direcoes.source = origemMapItem
-            direcoes.destination = destinoMapItem
-            direcoes.transportType = .automobile
+            let recDirecoes  = MKDirectionsRequest()
+            recDirecoes.source = origemMapItem
+            recDirecoes.destination = destinoMapItem
+            recDirecoes.transportType = .automobile
             
-            
+            let direcoes = MKDirections(request: recDirecoes)
+            //chama o metodo para interpolacoes do caminho
+            direcoes.calculate(completionHandler:
+               {(resposta: MKDirectionsResponse?, erro: Error?) in
+                let rota = resposta!.routes[0]
+                
+                self.vrMapa.add((rota.polyline), level: MKOverlayLevel.aboveRoads)
+                self.vrMapa.setRegion(MKCoordinateRegionForMapRect(rota.polyline.boundingMapRect), animated: true)
+            })
             
         }
     }
@@ -95,6 +103,7 @@ class MapsViewController: UIViewController, MKMapViewDelegate, CLLocationManager
         gerenteGPS.delegate = self
         
         let destino = CLLocationCoordinate2D(latitude: -10.1845667, longitude: -48.3357847)
+        localizacaoAtual = CLLocation(latitude: destino.latitude, longitude: destino.longitude)
         let zoom = MKCoordinateSpanMake(0.03, 0.03)
         let regiao = MKCoordinateRegionMake(destino, zoom)
         vrMapa.setRegion(regiao, animated: true)
@@ -117,6 +126,7 @@ class MapsViewController: UIViewController, MKMapViewDelegate, CLLocationManager
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let posicaoAtual = locations.last
         {
+            localizacaoAtual = posicaoAtual
             
             //criacao do pino q indicará o local
             let pino = MKPointAnnotation()
